@@ -28,6 +28,7 @@ func (h *UserHandler) GetAllUsers(c echo.Context) error {
 
 	// 全てのユーザーを取得(usecase層)
 	users, err := h.userUsecase.GetAllUsers()
+	// エラーハンドリング
 	if err != nil {
 		h.Logger.ErrorLog.Printf("Failed to get all users: %v", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})

@@ -7,6 +7,7 @@ import (
 
 // ユーザーユースケース(IF)
 type IUserUsecase interface {
+	// 全てのユーザーを取得
 	GetAllUsers() ([]domain_user.User, error)
 }
 
