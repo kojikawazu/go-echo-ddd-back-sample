@@ -14,7 +14,7 @@ func TestGetAllUsers(t *testing.T) {
 	// モックの挙動をリセット
 	mockRepo.ExpectedCalls = nil
 	// テストデータ
-	users := []domain_user.User{
+	users := []domain_user.Users{
 		{ID: "1", Username: "Alice", Email: "alice@example.com"},
 		{ID: "2", Username: "Bob", Email: "bob@example.com"},
 	}
@@ -40,7 +40,7 @@ func TestGetAllUsersEmpty(t *testing.T) {
 	// モックの挙動をリセット
 	mockRepo.ExpectedCalls = nil
 	// テストデータ
-	users := []domain_user.User{}
+	users := []domain_user.Users{}
 
 	// モックの挙動を設定
 	mockRepo.On("GetAllUsers").Return(users, nil)
@@ -62,7 +62,7 @@ func TestGetAllUsersError(t *testing.T) {
 	mockRepo.ExpectedCalls = nil
 
 	// モックの挙動を設定
-	mockRepo.On("GetAllUsers").Return(([]domain_user.User)(nil), errors.New("error"))
+	mockRepo.On("GetAllUsers").Return(([]domain_user.Users)(nil), errors.New("error"))
 
 	// ユースケースのメソッドを呼び出し
 	result, err := useCase.GetAllUsers()

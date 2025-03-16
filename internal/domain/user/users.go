@@ -3,7 +3,7 @@ package domain_user
 import "time"
 
 // ユーザー情報
-type User struct {
+type Users struct {
 	ID        string    `json:"id"         db:"id"`         // UUID型
 	Username  string    `json:"username"   db:"username"`   // ユーザー名
 	Email     string    `json:"email"      db:"email"`      // メールアドレス

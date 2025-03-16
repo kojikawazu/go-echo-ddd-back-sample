@@ -21,7 +21,7 @@ func NewUserRepository(l *pkg_logger.AppLogger, sc *pkg_supabase.SupabaseClient)
 }
 
 // 全てのユーザーを取得
-func (r *UserRepositoryImpl) GetAllUsers() ([]domain_user.User, error) {
+func (r *UserRepositoryImpl) GetAllUsers() ([]domain_user.Users, error) {
 	r.Logger.InfoLog.Printf("Fetching users from Supabase.")
 
 	query := `
@@ -37,9 +37,9 @@ func (r *UserRepositoryImpl) GetAllUsers() ([]domain_user.User, error) {
 	}
 
 	// ユーザーのリストを作成
-	users := []domain_user.User{}
+	users := []domain_user.Users{}
 	for rows.Next() {
-		var user domain_user.User
+		var user domain_user.Users
 		err = rows.Scan(
 			&user.ID,
 			&user.Username,

@@ -12,7 +12,7 @@ type MockUserRepository struct {
 }
 
 // GetAllUsersのモック
-func (m *MockUserRepository) GetAllUsers() ([]domain_user.User, error) {
+func (m *MockUserRepository) GetAllUsers() ([]domain_user.Users, error) {
 	args := m.Called()
 
 	// `nil` チェックを追加
@@ -20,5 +20,5 @@ func (m *MockUserRepository) GetAllUsers() ([]domain_user.User, error) {
 		return nil, args.Error(1)
 	}
 
-	return args.Get(0).([]domain_user.User), args.Error(1)
+	return args.Get(0).([]domain_user.Users), args.Error(1)
 }

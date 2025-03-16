@@ -34,7 +34,7 @@ func (r *AuthRepositoryImpl) Login(email string, password string) (string, error
 	// Supabaseからクエリを実行し、条件に一致するユーザーを取得
 	row := r.SupabaseClient.Pool.QueryRow(r.SupabaseClient.Ctx, query, email, password)
 
-	user := domain_user.User{}
+	user := domain_user.Users{}
 	err := row.Scan(&user.ID, &user.Username, &user.Email)
 	if err != nil {
 		r.Logger.ErrorLog.Printf("Failed to fetch user: %v", err)
