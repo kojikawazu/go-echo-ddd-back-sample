@@ -1,4 +1,4 @@
-package test_user_handler
+package test_todo_handler
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	domain_user "backend/internal/domain/user"
+	domain_todo "backend/internal/domain/todo"
 
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -20,45 +20,45 @@ func TestGetAllUsers(t *testing.T) {
 
 	// テストデータ
 	fixedTime := "2021-01-01T00:00:00Z"
-	users := []domain_user.Users{
-		{ID: "1", Username: "Alice", Email: "alice@example.com", Password: "", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
-		{ID: "2", Username: "Bob", Email: "bob@example.com", Password: "", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
+	todos := []domain_todo.Todos{
+		{ID: "1", Description: "alice@example.com", Completed: false, UserId: "1", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
+		{ID: "2", Description: "bob@example.com", Completed: false, UserId: "2", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
 	}
 
 	// モックの挙動を設定
-	mockUsecase.On("GetAllUsers").Return(users, nil)
+	mockUsecase.On("GetAllTodos").Return(todos, nil)
 
 	// ハンドラのメソッドを呼び出し
 	response := httptest.NewRecorder()
-	request := httptest.NewRequest("GET", "/api/users", nil)
-	handler.GetAllUsers(echo.New().NewContext(request, response))
+	request := httptest.NewRequest("GET", "/api/todo", nil)
+	handler.GetAllTodos(echo.New().NewContext(request, response))
 
 	// 検証
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, "application/json", response.Header().Get("Content-Type"))
 	assert.JSONEq(t, `[
-		{"id": "1", "username": "Alice", "email": "alice@example.com", "password": "", "created_at": "`+fixedTime+`", "updated_at": "`+fixedTime+`"},
-		{"id": "2", "username": "Bob", "email": "bob@example.com", "password": "", "created_at": "`+fixedTime+`", "updated_at": "`+fixedTime+`"}
+		{"id": "1", "description": "alice@example.com", "completed": false, "user_id": "1", "created_at": "`+fixedTime+`", "updated_at": "`+fixedTime+`"},
+		{"id": "2", "description": "bob@example.com", "completed": false, "user_id": "2", "created_at": "`+fixedTime+`", "updated_at": "`+fixedTime+`"}
 	]`, response.Body.String())
 	// モックのメソッドが期待通りに呼ばれたことを確認
 	mockUsecase.AssertExpectations(t)
 }
 
-// GetAllUsersのテスト(空のデータ)
-func TestGetAllUsersEmpty(t *testing.T) {
+// GetAllTodosのテスト(空のデータ)
+func TestGetAllTodosEmpty(t *testing.T) {
 	// モックの挙動をリセット
 	mockUsecase.ExpectedCalls = nil
 
 	// テストデータ
-	users := []domain_user.Users{}
+	todos := []domain_todo.Todos{}
 
 	// モックの挙動を設定
-	mockUsecase.On("GetAllUsers").Return(users, nil)
+	mockUsecase.On("GetAllTodos").Return(todos, nil)
 
 	// ハンドラのメソッドを呼び出し
 	response := httptest.NewRecorder()
-	request := httptest.NewRequest("GET", "/api/users", nil)
-	handler.GetAllUsers(echo.New().NewContext(request, response))
+	request := httptest.NewRequest("GET", "/api/todo", nil)
+	handler.GetAllTodos(echo.New().NewContext(request, response))
 
 	// 検証
 	assert.Equal(t, http.StatusOK, response.Code)
@@ -68,18 +68,18 @@ func TestGetAllUsersEmpty(t *testing.T) {
 	mockUsecase.AssertExpectations(t)
 }
 
-// GetAllUsersのテスト(異常系)
-func TestGetAllUsersError(t *testing.T) {
+// GetAllTodosのテスト(異常系)
+func TestGetAllTodosError(t *testing.T) {
 	// モックの挙動をリセット
 	mockUsecase.ExpectedCalls = nil
 
 	// モックの挙動を設定
-	mockUsecase.On("GetAllUsers").Return(nil, errors.New("error"))
+	mockUsecase.On("GetAllTodos").Return(nil, errors.New("error"))
 
 	// ハンドラのメソッドを呼び出し
 	response := httptest.NewRecorder()
-	request := httptest.NewRequest("GET", "/api/users", nil)
-	handler.GetAllUsers(echo.New().NewContext(request, response))
+	request := httptest.NewRequest("GET", "/api/todo", nil)
+	handler.GetAllTodos(echo.New().NewContext(request, response))
 
 	// 検証
 	assert.Equal(t, http.StatusInternalServerError, response.Code)

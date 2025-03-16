@@ -8,7 +8,7 @@ import (
 // ユーザーユースケース(IF)
 type IUserUsecase interface {
 	// 全てのユーザーを取得
-	GetAllUsers() ([]domain_user.User, error)
+	GetAllUsers() ([]domain_user.Users, error)
 }
 
 // ユーザーユースケース(Impl)
@@ -26,7 +26,7 @@ func NewUserUsecase(l *pkg_logger.AppLogger, u domain_user.IUserRepository) IUse
 }
 
 // 全てのユーザーを取得
-func (u *UserUsecase) GetAllUsers() ([]domain_user.User, error) {
+func (u *UserUsecase) GetAllUsers() ([]domain_user.Users, error) {
 	u.Logger.InfoLog.Println("GetAllUsers called")
 
 	// ユーザーリポジトリから全てのユーザーを取得(repository層)

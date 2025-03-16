@@ -4,6 +4,7 @@ import (
 	interfaces_auth "backend/internal/interfaces/auth"
 	interfaces_paralell "backend/internal/interfaces/paralell"
 	interfaces_sample "backend/internal/interfaces/sample"
+	interfaces_todo "backend/internal/interfaces/todo"
 	interfaces_user "backend/internal/interfaces/user"
 
 	"github.com/labstack/echo/v4"
@@ -16,6 +17,7 @@ func SetUpRouter(
 	paralellHandler *interfaces_paralell.ParalellHandler,
 	userHandler *interfaces_user.UserHandler,
 	authHandler *interfaces_auth.AuthHandler,
+	todoHandler *interfaces_todo.TodoHandler,
 ) {
 	api := e.Group("/api")
 	{
@@ -32,6 +34,10 @@ func SetUpRouter(
 		user := api.Group("/user")
 		{
 			user.GET("", authHandler.AuthorizationMiddleware(userHandler.GetAllUsers, "user"))
+		}
+		todo := api.Group("/todo")
+		{
+			todo.GET("", authHandler.AuthorizationMiddleware(todoHandler.GetAllTodos, "user"))
 		}
 		auth := api.Group("/auth")
 		{
