@@ -15,7 +15,7 @@ func TestGetAllTodos(t *testing.T) {
 	// モックの挙動をリセット
 	mockRepo.ExpectedCalls = nil
 	// テストデータ
-	todos := []domain_todo.Todos{
+	todos := []domain_todo.Todo{
 		{ID: "1", Description: "Todo 1", Completed: false, UserId: "1", CreatedAt: time.Now(), UpdatedAt: time.Now()},
 		{ID: "2", Description: "Todo 2", Completed: false, UserId: "2", CreatedAt: time.Now(), UpdatedAt: time.Now()},
 	}
@@ -41,7 +41,7 @@ func TestGetAllTodosEmpty(t *testing.T) {
 	// モックの挙動をリセット
 	mockRepo.ExpectedCalls = nil
 	// テストデータ
-	todos := []domain_todo.Todos{}
+	todos := []domain_todo.Todo{}
 
 	// モックの挙動を設定
 	mockRepo.On("GetAllTodos").Return(todos, nil)
@@ -63,7 +63,7 @@ func TestGetAllTodosError(t *testing.T) {
 	mockRepo.ExpectedCalls = nil
 
 	// モックの挙動を設定
-	mockRepo.On("GetAllTodos").Return(([]domain_todo.Todos)(nil), errors.New("error"))
+	mockRepo.On("GetAllTodos").Return(([]domain_todo.Todo)(nil), errors.New("error"))
 
 	// ユースケースのメソッドを呼び出し
 	result, err := useCase.GetAllTodos()

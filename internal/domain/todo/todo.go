@@ -2,8 +2,8 @@ package domain_todo
 
 import "time"
 
-// Todos情報
-type Todos struct {
+// Todo情報
+type Todo struct {
 	ID          string    `json:"id"          db:"id"`          // UUID型
 	Description string    `json:"description" db:"description"` // タスクの説明
 	Completed   bool      `json:"completed"   db:"completed"`   // タスクが完了しているかどうか

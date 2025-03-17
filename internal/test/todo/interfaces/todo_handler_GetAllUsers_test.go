@@ -20,7 +20,7 @@ func TestGetAllUsers(t *testing.T) {
 
 	// テストデータ
 	fixedTime := "2021-01-01T00:00:00Z"
-	todos := []domain_todo.Todos{
+	todos := []domain_todo.Todo{
 		{ID: "1", Description: "alice@example.com", Completed: false, UserId: "1", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
 		{ID: "2", Description: "bob@example.com", Completed: false, UserId: "2", CreatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC), UpdatedAt: time.Date(2021, 1, 1, 0, 0, 0, 0, time.UTC)},
 	}
@@ -50,7 +50,7 @@ func TestGetAllTodosEmpty(t *testing.T) {
 	mockUsecase.ExpectedCalls = nil
 
 	// テストデータ
-	todos := []domain_todo.Todos{}
+	todos := []domain_todo.Todo{}
 
 	// モックの挙動を設定
 	mockUsecase.On("GetAllTodos").Return(todos, nil)
