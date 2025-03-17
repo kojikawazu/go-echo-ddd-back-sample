@@ -38,6 +38,10 @@ func SetUpRouter(
 		todo := api.Group("/todo")
 		{
 			todo.GET("", authHandler.AuthorizationMiddleware(todoHandler.GetAllTodos, "user"))
+			todo.GET("/:id", authHandler.AuthorizationMiddleware(todoHandler.GetTodoById, "user"))
+			todo.POST("", authHandler.AuthorizationMiddleware(todoHandler.CreateTodo, "user"))
+			todo.PUT("/:id", authHandler.AuthorizationMiddleware(todoHandler.UpdateTodo, "user"))
+			todo.DELETE("/:id", authHandler.AuthorizationMiddleware(todoHandler.DeleteTodo, "user"))
 		}
 		auth := api.Group("/auth")
 		{
