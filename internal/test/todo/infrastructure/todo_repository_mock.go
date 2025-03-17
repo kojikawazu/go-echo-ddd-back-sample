@@ -35,6 +35,18 @@ func (m *MockTodoRepository) GetTodoById(id string) (domain_todo.Todo, error) {
 	return args.Get(0).(domain_todo.Todo), args.Error(1)
 }
 
+// GetTodoByUserIdのモック
+func (m *MockTodoRepository) GetTodoByUserId(userId string) ([]domain_todo.Todo, error) {
+	args := m.Called(userId)
+
+	// `nil` チェックを追加
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+
+	return args.Get(0).([]domain_todo.Todo), args.Error(1)
+}
+
 // CreateTodoのモック
 func (m *MockTodoRepository) CreateTodo(todo domain_todo.Todo) (domain_todo.Todo, error) {
 	args := m.Called(todo)

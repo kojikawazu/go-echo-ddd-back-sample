@@ -12,6 +12,8 @@ type ITodoUsecase interface {
 	GetAllTodos() ([]domain_todo.Todo, error)
 	// idを指定してTodoを取得
 	GetTodoById(id string) (domain_todo.Todo, error)
+	// 特定のユーザーのTodoを取得
+	GetTodoByUserId(userId string) ([]domain_todo.Todo, error)
 	// 新しいTodoを作成
 	CreateTodo(todo domain_todo.Todo) (domain_todo.Todo, error)
 	// Todoを更新
@@ -68,6 +70,27 @@ func (u *TodoUsecase) GetTodoById(id string) (domain_todo.Todo, error) {
 
 	u.Logger.InfoLog.Printf("Fetched todo: %v", todo)
 	return todo, nil
+}
+
+// 特定のユーザーのTodoを取得
+func (u *TodoUsecase) GetTodoByUserId(userId string) ([]domain_todo.Todo, error) {
+	u.Logger.InfoLog.Println("GetTodoByUserId called")
+
+	// バリデーション
+	if userId == "" {
+		u.Logger.ErrorLog.Println("user_id is empty")
+		return nil, errors.New("user_id is empty")
+	}
+
+	// Todoリポジトリから特定のユーザーのTodoを取得(repository層)
+	todos, err := u.todoRepository.GetTodoByUserId(userId)
+	if err != nil {
+		u.Logger.ErrorLog.Printf("Failed to get todo by user_id: %v", err)
+		return nil, err
+	}
+
+	u.Logger.InfoLog.Printf("Fetched %d todos", len(todos))
+	return todos, nil
 }
 
 // 新しいTodoを作成

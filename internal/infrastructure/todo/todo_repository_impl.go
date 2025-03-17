@@ -88,6 +88,46 @@ func (r *TodoRepositoryImpl) GetTodoById(id string) (domain_todo.Todo, error) {
 	return todo, nil
 }
 
+// 特定のユーザーのTodoを取得
+func (r *TodoRepositoryImpl) GetTodoByUserId(userId string) ([]domain_todo.Todo, error) {
+	r.Logger.InfoLog.Println("GetTodoByUserId called")
+
+	query := `
+		SELECT id, description, completed, user_id, created_at, updated_at
+		FROM todos
+		WHERE user_id = $1
+	`
+
+	// Supabaseからクエリを実行し、条件に一致するユーザーを取得
+	rows, err := r.SupabaseClient.Pool.Query(r.SupabaseClient.Ctx, query, userId)
+	if err != nil {
+		r.Logger.ErrorLog.Printf("Failed to fetch todos: %v", err)
+		return nil, err
+	}
+
+	// Todosのリストを作成
+	todos := []domain_todo.Todo{}
+	for rows.Next() {
+		var todo domain_todo.Todo
+		err = rows.Scan(
+			&todo.ID,
+			&todo.Description,
+			&todo.Completed,
+			&todo.UserId,
+			&todo.CreatedAt,
+			&todo.UpdatedAt,
+		)
+		if err != nil {
+			r.Logger.ErrorLog.Printf("Failed to scan todo: %v", err)
+			return nil, err
+		}
+		todos = append(todos, todo)
+	}
+
+	r.Logger.InfoLog.Printf("Fetched %d todos", len(todos))
+	return todos, nil
+}
+
 // 新しいTodoを作成
 func (r *TodoRepositoryImpl) CreateTodo(todo domain_todo.Todo) (domain_todo.Todo, error) {
 	r.Logger.InfoLog.Println("CreateTodo called")

@@ -72,6 +72,28 @@ func (h *TodoHandler) GetTodoById(c echo.Context) error {
 	return c.JSON(http.StatusOK, todo)
 }
 
+// 特定のユーザーのTodoを取得
+func (h *TodoHandler) GetTodoByUserId(c echo.Context) error {
+	h.Logger.InfoLog.Println("GetTodoByUserId called")
+
+	// Contextからuser_idを取得
+	userID := c.Get("userId")
+
+	// Todoユースケースから特定のユーザーのTodoを取得
+	todos, err := h.todoUsecase.GetTodoByUserId(userID.(string))
+	// エラーハンドリング
+	if err != nil {
+		h.Logger.ErrorLog.Printf("Failed to get todo by user_id: %v", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+	}
+
+	// TodoのリストをJSON形式で返す
+	h.Logger.InfoLog.Printf("Todos: %v", len(todos))
+	return c.JSON(http.StatusOK, todos)
+}
+
 // 新しいTodoを作成
 func (h *TodoHandler) CreateTodo(c echo.Context) error {
 	h.Logger.InfoLog.Println("CreateTodo called")
