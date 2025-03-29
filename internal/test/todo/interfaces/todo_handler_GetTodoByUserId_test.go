@@ -84,7 +84,7 @@ func TestGetTodoByUserIdErrorUserIdEmpty(t *testing.T) {
 	mockUsecase.ExpectedCalls = nil
 
 	// モックの挙動を設定
-	mockUsecase.On("GetTodoByUserId", "").Return(nil, errors.New("userId is empty"))
+	mockUsecase.On("GetTodoByUserId", "").Return(nil, errors.New("user_id is empty"))
 
 	// ハンドラのメソッドを呼び出し
 	e := echo.New()
@@ -99,8 +99,8 @@ func TestGetTodoByUserIdErrorUserIdEmpty(t *testing.T) {
 	handler.GetTodoByUserId(c)
 
 	// JSONレスポンスのデコード
-	var resTodos []domain_todo.Todo
-	err := json.Unmarshal(res.Body.Bytes(), &resTodos)
+	var errRes map[string]interface{}
+	err := json.Unmarshal(res.Body.Bytes(), &errRes)
 	if err != nil {
 		t.FailNow()
 	}
@@ -108,7 +108,7 @@ func TestGetTodoByUserIdErrorUserIdEmpty(t *testing.T) {
 	// JSONのデコード後に比較
 	assert.Equal(t, http.StatusNotFound, res.Code)
 	assert.Equal(t, "application/json", res.Header().Get("Content-Type"))
-	assert.Contains(t, res.Body.String(), `"message":`)
+	assert.Contains(t, errRes["message"], "user_id is empty")
 
 	// モックのメソッドが期待通りに呼ばれたことを確認
 	mockUsecase.AssertExpectations(t)
@@ -138,8 +138,8 @@ func TestGetTodoByUserIdError(t *testing.T) {
 	handler.GetTodoByUserId(c)
 
 	// JSONレスポンスのデコード
-	var resTodos []domain_todo.Todo
-	err := json.Unmarshal(res.Body.Bytes(), &resTodos)
+	var errRes map[string]interface{}
+	err := json.Unmarshal(res.Body.Bytes(), &errRes)
 	if err != nil {
 		t.FailNow()
 	}
@@ -147,7 +147,7 @@ func TestGetTodoByUserIdError(t *testing.T) {
 	// JSONのデコード後に比較
 	assert.Equal(t, http.StatusInternalServerError, res.Code)
 	assert.Equal(t, "application/json", res.Header().Get("Content-Type"))
-	assert.Contains(t, res.Body.String(), `"message":`)
+	assert.Contains(t, errRes["message"], "error")
 
 	// モックのメソッドが期待通りに呼ばれたことを確認
 	mockUsecase.AssertExpectations(t)
