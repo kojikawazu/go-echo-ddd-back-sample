@@ -83,10 +83,18 @@ func (h *TodoHandler) GetTodoByUserId(c echo.Context) error {
 	todos, err := h.todoUsecase.GetTodoByUserId(userID.(string))
 	// エラーハンドリング
 	if err != nil {
-		h.Logger.ErrorLog.Printf("Failed to get todo by user_id: %v", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"message": err.Error(),
-		})
+		switch err.Error() {
+		case "user_id is empty":
+			h.Logger.ErrorLog.Printf("Failed to get todo by user_id: %v", err)
+			return c.JSON(http.StatusNotFound, map[string]string{
+				"message": err.Error(),
+			})
+		default:
+			h.Logger.ErrorLog.Printf("Failed to get todo by user_id: %v", err)
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"message": err.Error(),
+			})
+		}
 	}
 
 	// TodoのリストをJSON形式で返す
