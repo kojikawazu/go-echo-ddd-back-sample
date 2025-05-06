@@ -7,6 +7,7 @@ Go/Echoを使用し、DDD設計を行う。
 - 並列実行(ゴルーチン)
 - Supabase接続(DB操作)
 - 認証、認可
+- 線形探索アルゴリズム
 
 ## Directory
 
