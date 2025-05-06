@@ -4,6 +4,7 @@ import (
 	interfaces_auth "backend/internal/interfaces/auth"
 	interfaces_paralell "backend/internal/interfaces/paralell"
 	interfaces_sample "backend/internal/interfaces/sample"
+	interfaces_search "backend/internal/interfaces/search"
 	interfaces_todo "backend/internal/interfaces/todo"
 	interfaces_user "backend/internal/interfaces/user"
 
@@ -18,6 +19,7 @@ func SetUpRouter(
 	userHandler *interfaces_user.UserHandler,
 	authHandler *interfaces_auth.AuthHandler,
 	todoHandler *interfaces_todo.TodoHandler,
+	searchHandler *interfaces_search.SearchHandler,
 ) {
 	api := e.Group("/api")
 	{
@@ -43,6 +45,13 @@ func SetUpRouter(
 			todo.POST("", authHandler.AuthorizationMiddleware(todoHandler.CreateTodo, "user"))
 			todo.PUT("/:id", authHandler.AuthorizationMiddleware(todoHandler.UpdateTodo, "user"))
 			todo.DELETE("/:id", authHandler.AuthorizationMiddleware(todoHandler.DeleteTodo, "user"))
+		}
+		search := api.Group("/search")
+		{
+			search.POST("/linear", searchHandler.LinearSearch)
+			search.POST("/binary", searchHandler.BinarySearch)
+			search.POST("/bfs", searchHandler.BFS)
+			search.POST("/dfs", searchHandler.DFS)
 		}
 		auth := api.Group("/auth")
 		{

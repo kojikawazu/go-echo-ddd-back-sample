@@ -8,12 +8,14 @@ import (
 	interfaces_auth "backend/internal/interfaces/auth"
 	interfaces_paralell "backend/internal/interfaces/paralell"
 	interfaces_sample "backend/internal/interfaces/sample"
+	interfaces_search "backend/internal/interfaces/search"
 	interfaces_todo "backend/internal/interfaces/todo"
 	interfaces_user "backend/internal/interfaces/user"
 	pkg_logger "backend/internal/pkg/logger"
 	pkg_supabase "backend/internal/pkg/supabase"
 	"backend/internal/router"
 	usecase_auth "backend/internal/usecase/auth"
+	usecase_search "backend/internal/usecase/search"
 	usecase_todo "backend/internal/usecase/todo"
 	usecase_user "backend/internal/usecase/user"
 	"net/http"
@@ -46,15 +48,18 @@ func setUp(e *echo.Echo, ap *config.AppConfig, l *pkg_logger.AppLogger, sc *pkg_
 	userUsecase := usecase_user.NewUserUsecase(l, userRepository)
 	authUsecase := usecase_auth.NewAuthUsecase(l, authRepository)
 	todoUsecase := usecase_todo.NewTodoUsecase(l, todoRepository)
+	searchUsecase := usecase_search.NewSearchUsecase(l)
+
 	// handler
 	userHandler := interfaces_user.NewUserHandler(l, userUsecase)
 	authHandler := interfaces_auth.NewAuthHandler(l, authUsecase)
 	todoHandler := interfaces_todo.NewTodoHandler(l, todoUsecase)
 	sampleHandler := interfaces_sample.NewSampleHandler()
 	paralellHandler := interfaces_paralell.NewParalellHandler(ap, l)
+	searchHandler := interfaces_search.NewSearchHandler(l, searchUsecase)
 
 	// ルーティングの設定
-	router.SetUpRouter(e, sampleHandler, paralellHandler, userHandler, authHandler, todoHandler)
+	router.SetUpRouter(e, sampleHandler, paralellHandler, userHandler, authHandler, todoHandler, searchHandler)
 }
 
 // アプリケーションのメイン関数
